@@ -438,3 +438,35 @@ input, textarea {
 
 
 
+/* Fix responsiveness on small devices */
+html, body {
+  overflow-x: hidden;
+}
+
+.container {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (max-width: 768px) {
+  .about-box, .feature-box, .member-card, .roadmap-step {
+    flex: 1 1 100%;
+  }
+
+  .hero-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero_detail-box,
+  .hero_img-container {
+    width: 100%;
+    text-align: center;
+  }
+
+  .about_img-box {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
