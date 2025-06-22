@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Science Club Blog</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2a2a2a;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    input, textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    #blogPosts {
+      max-width: 800px;
+      margin: 40px auto;
+    }
+
+    .post {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .post h3 {
+      margin-top: 0;
+    }
+
+    .post small {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📚 Science Club Blog</h1>
+
+  <form id="blogForm">
+    <input type="text" name="author" placeholder="Your Name" required />
+    <input type="text" name="title" placeholder="Blog Title" required />
+    <textarea name="content" rows="5" placeholder="Write your blog..." required></textarea>
+    <button type="submit">Post Blog</button>
+  </form>
+
+  <div id="blogPosts">
+    <!-- Posts will appear here -->
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:3000";
+
+    document.getElementById('blogForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        author: form.author.value,
+        title: form.title.value,
+        content: form.content.value
+      };
+
+      await fetch(`${API_URL}/blogs`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+
+      form.reset();
+      loadBlogs();
+    });
+
+    async function loadBlogs() {
+      const res = await fetch(`${API_URL}/blogs`);
+      const blogs = await res.json();
+      const container = document.getElementById('blogPosts');
+      container.innerHTML = blogs.map(blog => `
+        <div class="post">
+          <h3>${blog.title}</h3>
+          <small>By ${blog.author} – ${new Date(blog.createdAt).toLocaleString()}</small>
+          <p>${blog.content}</p>
+        </div>
+      `).join('');
+    }
+
+    loadBlogs();
+  </script>
+</body>
+</html>
